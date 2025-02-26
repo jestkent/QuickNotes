@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Notes - Mood Edition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        textarea {
+            width: 80%;
+            height: 200px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #333;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        select {
+            margin-top: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quick Notes - Mood Edition</h1>
+    <select id="moodSelector" onchange="changeMood()">
+        <option value="light">Light Mode</option>
+        <option value="dark">Dark Mode</option>
+        <option value="calm">Calm Mode</option>
+    </select><br>
+    <textarea id="note" placeholder="Type your notes here..."></textarea><br>
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="clearNote()">Clear Note</button>
+    <script>
+        document.getElementById('note').value = localStorage.getItem('quickNote') || '';
+        function saveNote() {
+            localStorage.setItem('quickNote', document.getElementById('note').value);
+            alert('Note saved!');
+        }
+        function clearNote() {
+            document.getElementById('note').value = '';
+            localStorage.removeItem('quickNote');
+        }
+        function changeMood() {
+            const mode = document.getElementById('moodSelector').value;
+            if (mode === 'dark') {
+                document.body.style.backgroundColor = '#333';
+                document.body.style.color = 'white';
+            } else if (mode === 'calm') {
+                document.body.style.backgroundColor = '#dff0d8';
+                document.body.style.color = '#333';
+            } else {
+                document.body.style.backgroundColor = '#f4f4f4';
+                document.body.style.color = '#000';
+            }
+        }
+    </script>
+</body>
+</html>
