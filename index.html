@@ -4,89 +4,302 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Notes - Mood Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #1c1e21;
+            --border-color: #dce1e6;
+            --primary-color: #007bff;
+            --primary-hover-color: #0056b3;
+            --wormhole-gradient: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            --font-main: 'Inter', sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #18191a;
+            --card-bg-color: #242526;
+            --text-color: #e4e6eb;
+            --border-color: #3a3b3c;
+            --primary-color: #2d88ff;
+            --primary-hover-color: #529eff;
+        }
+
+        [data-theme="calm"] {
+            --bg-color: #e0f0e3;
+            --card-bg-color: #ffffff;
+            --text-color: #3c4043;
+            --border-color: #c6d6c9;
+            --primary-color: #34a853;
+            --primary-hover-color: #2c8e45;
+        }
+        
+        [data-theme="wormhole"] {
+            --bg-color: #000;
+            --card-bg-color: rgba(20, 20, 30, 0.8);
+            --text-color: #e4e6eb;
+            --border-color: rgba(100, 100, 220, 0.5);
+            --primary-color: #8a2be2;
+            --primary-hover-color: #9932cc;
+        }
+
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background-color 0.4s ease;
+        }
+        
+        /* Wormhole Animation */
+        body.wormhole-active {
+            background-size: 200% 200%;
+            animation: space-travel 20s ease-in-out infinite;
+            background-image: var(--wormhole-gradient);
+        }
+
+        @keyframes space-travel {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.4s ease, border-color 0.4s ease;
             text-align: center;
-            background-color: #f4f4f4;
-            transition: background-color 0.5s ease-in-out;
         }
+        
+        header {
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: -5px;
+        }
+
+        /* Note Area */
         textarea {
-            width: 80%;
+            width: 100%;
             height: 200px;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #333;
+            padding: 15px;
+            font-size: 1rem;
+            font-family: var(--font-main);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
-        button {
-            margin-top: 10px;
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        }
+        
+        /* Controls - Buttons & Select */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .controls button, .controls select {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 0.95rem;
+            font-family: var(--font-main);
+            font-weight: 500;
             cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        button:hover {
-            transform: scale(1.1);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        
+        .controls button:hover, .controls select:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
-        select {
-            margin-top: 10px;
-            padding: 5px;
-            font-size: 16px;
+
+        .controls button.primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
         }
+        
+        .controls button.primary:hover {
+            background-color: var(--primary-hover-color);
+            border-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .controls button.primary:active {
+            transform: translateY(0);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2d3748;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -10px);
+        }
+        
+        /* Button Icons */
+        .icon {
+            width: 1em;
+            height: 1em;
+            stroke-width: 2;
+            fill: none;
+            stroke: currentColor;
+        }
+
     </style>
 </head>
-<body>
-    <h1>Quick Notes - Mood Edition</h1>
-    <select id="moodSelector" onchange="changeMood()">
-        <option value="light">Light Mode</option>
-        <option value="dark">Dark Mode</option>
-        <option value="calm">Calm Mode</option>
-        <option value="wormhole">Wormhole Mode</option>
-    </select><br>
-    <textarea id="note" placeholder="Type your notes here..."></textarea><br>
-    <button onclick="saveNote()">Save Note</button>
-    <button onclick="viewNote()">View Saved Note</button>
-    <button onclick="clearNote()">Clear Note</button>
-    <button onclick="sendToWormhole()">Send to Wormhole</button>
+<body data-theme="light">
+
+    <div class="container">
+        <header>
+            <h1>Quick Notes</h1>
+            <p>Your thoughts, in any mood.</p>
+        </header>
+        
+        <textarea id="note" placeholder="What's on your mind?"></textarea>
+        
+        <div class="controls">
+            <button class="primary" onclick="saveNote()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save
+            </button>
+            <button onclick="copyNote()">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy
+            </button>
+            <button onclick="clearNote()">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                Clear
+            </button>
+            <select id="moodSelector" onchange="changeMood()" aria-label="Select a color theme">
+                <option value="light">Light Mode</option>
+                <option value="dark">Dark Mode</option>
+                <option value="calm">Calm Mode</option>
+                <option value="wormhole">Wormhole Mode</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+
     <script>
-        document.getElementById('note').value = localStorage.getItem('quickNote') || '';
+        const noteArea = document.getElementById('note');
+        const moodSelector = document.getElementById('moodSelector');
+        const body = document.body;
+        const toast = document.getElementById('toast');
+
+        // Load saved note and mood from localStorage
+        window.addEventListener('load', () => {
+            noteArea.value = localStorage.getItem('quickNote') || '';
+            const savedMood = localStorage.getItem('noteMood') || 'light';
+            moodSelector.value = savedMood;
+            changeMood();
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
         function saveNote() {
-            localStorage.setItem('quickNote', document.getElementById('note').value);
-            alert('Note saved!');
+            localStorage.setItem('quickNote', noteArea.value);
+            showToast('Note saved successfully!');
         }
-        function viewNote() {
-            let savedNote = localStorage.getItem('quickNote') || 'No saved note found.';
-            alert('Saved Note: ' + savedNote);
+
+        function copyNote() {
+            if (!noteArea.value) {
+                showToast('Nothing to copy!');
+                return;
+            }
+            navigator.clipboard.writeText(noteArea.value).then(() => {
+                showToast('Note copied to clipboard!');
+            }).catch(err => {
+                showToast('Failed to copy note.');
+                console.error('Clipboard error:', err);
+            });
         }
+
         function clearNote() {
-            document.getElementById('note').value = '';
+            noteArea.value = '';
             localStorage.removeItem('quickNote');
+            showToast('Note cleared.');
         }
-        function sendToWormhole() {
-            document.getElementById('note').value = '';
-            alert('Message sent into the void! No records kept.');
-        }
+
         function changeMood() {
-            const mode = document.getElementById('moodSelector').value;
-            if (mode === 'dark') {
-                document.body.style.backgroundColor = '#333';
-                document.body.style.color = 'white';
-            } else if (mode === 'calm') {
-                document.body.style.backgroundColor = '#dff0d8';
-                document.body.style.color = '#333';
-            } else if (mode === 'wormhole') {
-                document.body.style.backgroundColor = '#000';
-                document.body.style.color = '#fff';
-                document.body.style.backgroundImage = "radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(45,45,45,1) 100%)";
+            const selectedMood = moodSelector.value;
+            body.setAttribute('data-theme', selectedMood);
+            localStorage.setItem('noteMood', selectedMood);
+            
+            // Special class for wormhole animation
+            if (selectedMood === 'wormhole') {
+                body.classList.add('wormhole-active');
             } else {
-                document.body.style.backgroundColor = '#f4f4f4';
-                document.body.style.color = '#000';
+                body.classList.remove('wormhole-active');
             }
         }
     </script>
+
 </body>
 </html>
